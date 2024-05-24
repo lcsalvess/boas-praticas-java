@@ -24,7 +24,7 @@ public class AbrigoServiceTest {
     private Abrigo abrigo = new Abrigo("Teste", "11999446678", "teste@gmail.com");
 
     @Test
-    @DisplayName("Verificar se requisição GET será chamada")
+    @DisplayName("Verificar se requisição GET será chamada quando HÁ abrigo")
     public void requisicao_cenario1() throws IOException, InterruptedException {
         abrigo.setId(0L);
         String expectedAbrigosCadastrados = "Abrigos cadastrados:";
@@ -73,7 +73,29 @@ public class AbrigoServiceTest {
         Assertions.assertEquals(expectedIdENome, actualIdENome);
 
     }
+    @Test
+    @DisplayName("Verificar se requisição GET será chamada quando NÃO há abrigo")
+    public void requisicao_cenario2() throws IOException, InterruptedException {
+        abrigo.setId(0L);
+        String expected = "Não há abrigos cadastrados";
 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(baos);
+        System.setOut(printStream);
+
+        //simulando retorno vazo
+        when(response.body()).thenReturn("[]");
+
+        when(clientHttpConfiguration.dispararRequisicaoGet(anyString())).thenReturn(response);
+
+        abrigoService.listarAbrigo();
+
+        String[] lines = baos.toString().split(System.lineSeparator());
+        String actual = lines[0];
+
+        Assertions.assertEquals(expected, actual);
+
+    }
 
 
 
