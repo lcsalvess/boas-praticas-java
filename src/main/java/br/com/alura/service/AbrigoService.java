@@ -3,10 +3,6 @@ package br.com.alura.service;
 import br.com.alura.client.ClientHttpConfiguration;
 import br.com.alura.domain.Abrigo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -17,9 +13,12 @@ import java.util.Scanner;
 
 public class AbrigoService {
     private  ClientHttpConfiguration client;
+
     public AbrigoService(ClientHttpConfiguration client) {
         this.client = client;
+
     }
+
     public void listarAbrigo() throws IOException, InterruptedException {
 
         String uri = "http://localhost:8080/abrigos";
@@ -27,13 +26,23 @@ public class AbrigoService {
         String responseBody = response.body();
         Abrigo[] abrigos = new ObjectMapper().readValue(responseBody, Abrigo[].class);
         List<Abrigo> abrigoList = Arrays.stream(abrigos).toList();
-        System.out.println("Abrigos cadastrados:");
-        for (Abrigo abrigo : abrigoList) {
-            long id = abrigo.getId();
-            String nome = abrigo.getNome();
-            System.out.println(id +" - " +nome);
+        if (abrigoList.isEmpty()){
+            System.out.println("Não há abrigos cadastrados");
+        } else{
+            mostrarAbrigos(abrigoList);
         }
     }
+
+
+    private void mostrarAbrigos(List<Abrigo> abrigos) {
+        System.out.println("Abrigos cadastrados:");
+        for (Abrigo abrigo : abrigos) {
+            long id = abrigo.getId();
+            String nome = abrigo.getNome();
+            System.out.println(id + " - " + nome);
+        }
+    }
+
     public void cadastrarAbrigo() throws IOException, InterruptedException {
         System.out.println("Digite o nome do abrigo:");
         String nome = new Scanner(System.in).nextLine();
@@ -42,7 +51,7 @@ public class AbrigoService {
         System.out.println("Digite o email do abrigo:");
         String email = new Scanner(System.in).nextLine();
 
-        var abrigo = new Abrigo(nome,telefone,email);
+        Abrigo abrigo = new Abrigo(nome, telefone, email);
 
         String uri = "http://localhost:8080/abrigos";
         HttpResponse<String> response = client.dispararRequisicaoPost(uri, abrigo);
@@ -58,3 +67,4 @@ public class AbrigoService {
     }
 
 }
+
