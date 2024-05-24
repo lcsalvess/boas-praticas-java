@@ -3,6 +3,7 @@ package br.com.alura.service;
 import br.com.alura.client.ClientHttpConfiguration;
 import br.com.alura.domain.Pet;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class PetService {
     public PetService(ClientHttpConfiguration client) {
         this.client = client;
     }
-    public void listarPetsNoAbrigo() throws IOException, InterruptedException {
+    public void listarPetsPorAbrigo() throws IOException, InterruptedException {
         System.out.println("Digite o id ou nome do abrigo:");
         String idOuNome = new Scanner(System.in).nextLine();
 
